@@ -54,4 +54,8 @@ public class DatosPersonales { //Esta clase no ofrece instancia, solo puede ofre
 
         this.whatsapp = whatsapp;
     }
-}
+        // Otros campos y métodos
+
+
+    }
+
