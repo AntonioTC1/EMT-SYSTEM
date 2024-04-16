@@ -11,7 +11,7 @@ public class Principal {
         Scanner scanner = new Scanner(System.in);
 
         // Solicitar usuario y contraseña
-        System.out.println("Por favor, ingrese su usuario y contraseña:");
+        System.out.println("Por favor, ingrese se usuario y contraseña:");
         System.out.print("Usuario: ");
         String usuario = scanner.nextLine();
         System.out.print("Contraseña: ");
