@@ -2,115 +2,88 @@ package Gestor.archivos;
 
 import java.io.*;
 
-public final class ArchivoTexto extends ControlArchivos implements iFileText{
-    private File file;
-    private FileReader fr;
-    private BufferedReader br;
-    private FileWriter fw;
-    private BufferedWriter bw;
-    private boolean archivoExiste;
-    private boolean modoLectura;
-    private boolean modoEscritura;
-
-    public ArchivoTexto(String tituloArchivo){
+public class ArchivoTexto extends ControlArchivos implements iFileText {
+    private File file; // Representa el archivo en sí
+    private BufferedReader br; // Permite leer caracteres de un archivo
+    private BufferedWriter bw; // Proporciona escritura de líneas eficiente
+    // Constructor que recibe el nombre del archivo al instanciar la clase
+    public ArchivoTexto(String nomArchivo) {
+        super(nomArchivo);
+        this.file = new File(nomArchivo);
+    }
+    // Constructor que recibe el nombre del archivo y el modo de lectura al instanciar la clase
+    public ArchivoTexto(String nomArchivo, boolean modoLectura) {
+        super(nomArchivo);
+        this.file = new File(nomArchivo);
+    }
+    // Implementación del método para abrir el archivo en modo lectura
+    public void AbrirModoLectura() {
         try {
-            file = new File(tituloArchivo);
-
-            if (!file.exists())
-                file.createNewFile();
-
-            this.archivoExiste=true;
-            this.modoLectura=false;
-            this.modoEscritura=false;
-        }
-        catch (Exception e){
-            System.out.println("Error al intentar buscar el archivo");
-            this.archivoExiste=false;
-            //System.out.println();
+            FileReader fr = new FileReader(file);
+            br = new BufferedReader(fr);
+        } catch (IOException e) {
+            System.out.println("Error al abrir el archivo en modo lectura");
         }
     }
-
-    public ArchivoTexto(String tituloArchivo, boolean nuevo) {
-
-    }
-
-
-    public void AbrirModoLectura(){
-        if (archivoExiste==true) {
-            try {
-                fr = new FileReader(this.file.getAbsoluteFile());
-                br = new BufferedReader(this.fr);
-                this.modoLectura=true;
-                System.out.println("Archivo abierto en modo lectura");
-            } catch (Exception e) {
-                System.out.println("Error: El archivo no se puede abrir en modo lectura");
-            }
-        }
-    }
-    public void Leer2(){
-        if (archivoExiste==true) {
-            try {
-                int i = 1;
-                String linea = this.br.readLine();
-
-                while (linea != null) {
-                    System.out.println(i + ".- " + linea);
-                    linea = this.br.readLine();
-                    i++;
+    // Implementación del método para leer el contenido del archivo
+    public String Leer() {
+        try {
+            if (br != null) {
+                StringBuilder contenido = new StringBuilder();
+                String linea;
+                // Leer líneas del archivo y construir contenido
+                while ((linea = br.readLine()) != null) {
+                    contenido.append(linea).append("\n");
                 }
-            } catch (Exception e) {
-                System.out.println("Error: No se puede extraer información del archivo");
+                return contenido.toString();
+            } else {
+                System.out.println("Error: BufferedReader no inicializado. Abre el archivo en modo lectura primero.");
+                return null;
             }
+        } catch (IOException e) {
+            System.out.println("Error al leer el archivo");
+            return null;
         }
     }
-
-    public String Leer(){
-        if (archivoExiste==true) {
-            try {
-                return this.br.readLine();
-            } catch (Exception e) {
-            }
-        }
-        return null;
-    }
-
-    public void AbrirModoEscritura(){
-        if (archivoExiste==true) {
-            try {
-                fw = new FileWriter(this.file.getAbsoluteFile(),true);
-                bw = new BufferedWriter(this.fw);
-                modoEscritura=true;
-                System.out.println("Archivo abierto en modo escritura");
-            } catch (Exception e) {
-                System.out.println("Error: El archivo no se puede abrir en modo escritura");
-            }
+    // Implementación del método para abrir el archivo en modo escritura
+    public void AbrirModoEscritura() {
+        try {
+            FileWriter fw = new FileWriter(file);
+            bw = new BufferedWriter(fw);
+            System.out.println("Modo Escritura activado. Nombre del archivo: " + file.getName());
+        } catch (IOException e) {
+            System.out.println("Error al abrir el archivo en modo escritura");
         }
     }
+    // Implementación del método para escribir en el archivo
+    public void Escribir(String contenido) {
 
-    public void Escribir(String texto){
-        if (archivoExiste==true) {
-            try {
-                this.bw.write(texto+"\n");
-            } catch (Exception e) {
-                System.out.println("Error: No se puede escribir información en el archivo");
-            }
+        try {
+            bw.write(contenido);
+        } catch (IOException e) {
+            System.out.println("Error al escribir en el archivo");
         }
     }
-
-    public void Cerrar()
-    {
-        if (modoEscritura==true){
-            try {
-                this.bw.close();
-                this.fw.close();
-            }catch (Exception e){ }
+    // Implementación del método para cerrar el archivo
+    public void Cerrar() {
+        try {
+            // Cerrar el BufferedReader y BufferedWriter si están inicializados
+            if (br != null) br.close();
+            if (bw != null) bw.close();
+            System.out.println("Cerrando el archivo. Nombre del archivo: " + file.getName());
+        } catch (IOException e) {
+            System.out.println("Error al cerrar el archivo");
         }
-        else if (modoLectura==true)
-        {
-            try {
-                this.br.close();
-                this.fr.close();
-            }catch (Exception e) { }
-        }
+    }
+    // Clase principal que contiene el método main para probar la funcionalidad de las clases
+    public static void main(String[] args) {
+        // Ejemplo de uso
+        ArchivoTexto archivo = new ArchivoTexto("ejemplo.txt");
+        archivo.AbrirModoLectura();
+        System.out.println("Contenido del archivo:\n" + archivo.Leer());
+        archivo.Cerrar();
+        archivo.AbrirModoEscritura();
+        archivo.Escribir("Hola, este es un ejemplo de archivos en Java.");
+        archivo.Cerrar();
     }
 }

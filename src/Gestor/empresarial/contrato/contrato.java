@@ -1,6 +1,7 @@
 package Gestor.empresarial.contrato;
 
 public final class contrato {
+
     private int id;
     private int noContrato;
     private int annio;

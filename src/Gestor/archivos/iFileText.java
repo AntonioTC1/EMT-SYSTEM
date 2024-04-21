@@ -1,14 +1,9 @@
 package Gestor.archivos;
 
-public  interface iFileText {
-    public void AbrirModoLectura();
-    public void Leer2();
-
-    public String Leer();
-
-    public void AbrirModoEscritura();
-
-    public void Escribir(String texto);
-
-    public void Cerrar();
+interface iFileText {
+    void AbrirModoLectura(); // Abrir el archivo en modo lectura
+    String Leer(); // Leer el contenido del archivo
+    void AbrirModoEscritura(); // Abrir el archivo en modo escritura
+    void Escribir(String contenido); // Escribir en el archivo
+    void Cerrar(); // Cerrar el archivo
 }
